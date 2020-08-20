@@ -1,0 +1,17 @@
+//Admin details: this is where the program name, close at times, and auto period dates are stored.
+//Please do not remove anything from this file directly; anything you would need to change can be changed
+//via the admin panel. Thanks, -Nate
+------------------------------------------------------
+Name:
+Apple
+------------------------------------------------------
+Close at:
+22:00,02:30
+------------------------------------------------------
+Automatic period (mod 2 weeks from):
+04/06/20
+------------------------------------------------------
+Recent time changes:
+------------------------------------------------------
+Reset Log:
+------------------------------------------------------

@@ -1,0 +1,14 @@
+//This is where the admin password should be stored
+//(dont worry it will be encrypted once the program is first launched and if you ever mess up,
+//just wipe out the hex string and reenter your name and password in the following format):
+//Note that you must input your username and password here and cannot simply hash your own combo online
+//and dump the reuslts here since A) you do not know the hashing algorithm used and B) before even hashing,
+//operations are performed on the user-pass combo to ensure greater security ;)
+
+//format: !username:password
+
+//For example: if my name was nathan and I wanted the password Java, I would write the following line: !nathan:Java
+//This would cause the username nathan and a password of Java to allow for the admin panel to be accessed
+
+
+47e8294e1631d54290f653e63f6c8c6c059c3575ffd38e22671c2064d5d910f
