@@ -25,6 +25,10 @@ import java.text.*;
 import java.awt.*;
 import java.io.*;
 
+//todo inform user refreshing will close the program
+//todo inform user we will close in 5,4,3,2,1 and give them an option to cancel forced close
+// if the program is going to close
+
 public class Punch implements ActionListener {
     //LinkedList objects used in the program
     private LinkedList<Users> Users = new LinkedList<>();
@@ -2192,7 +2196,7 @@ public class Punch implements ActionListener {
                 for (String time: CloseTimes1) {
                     String[] parts = time.split(":");
 
-                    if (!(Integer.parseInt(parts[0]) < 24) || !(Integer.parseInt(parts[0]) >= 0) ||
+                    if (!parts[0].matches("\\d") || !parts[1].matches("\\d") || !(Integer.parseInt(parts[0]) < 24) || !(Integer.parseInt(parts[0]) >= 0) ||
                             !(Integer.parseInt(parts[1]) < 60) || !(Integer.parseInt(parts[1]) >= 0)) {
 
                         closeTimeFormatCorrect = false;
@@ -2205,6 +2209,7 @@ public class Punch implements ActionListener {
                                 "Examples: \"23:00\",\"14:45,20:45,02:30\"", "Parsing error", JOptionPane.ERROR_MESSAGE,scaledDown);
 
                         swingFeel();
+                        break;
                     }
                 }
 
@@ -2240,9 +2245,8 @@ public class Punch implements ActionListener {
                 boolean periodDateFormatCorrect = true;
 
                 try {
-                    if (NewAutoPeriod.length() != 8 || NewAutoPeriod.contains("??/??/??")) {
+                    if (NewAutoPeriod.length() != 8 || NewAutoPeriod.contains("??/??/??"))
                         throw new Exception("new auto period improperly formatted\nCorrect formats: \"12/25/19\",\"06/27/21\"");
-                    }
 
                     SimpleDateFormat DF = new SimpleDateFormat("MM/dd/yy");
                     DF.setLenient(false);
@@ -2251,7 +2255,6 @@ public class Punch implements ActionListener {
 
                 catch (ParseException excep) {
                     periodDateFormatCorrect = false;
-
                     windowsFeel();
 
                     JOptionPane.showMessageDialog(null,"An unfortunate error occured.\nThis" +
@@ -2265,9 +2268,9 @@ public class Punch implements ActionListener {
                 if (periodDateFormatCorrect) {
                     for (AD ad: ADS) {
                         if (ad.getName().equals("auto period")) {
-                            if (!ad.getValue().equals(NewAutoPeriod)) {
+                            if (!ad.getValue().equals(NewAutoPeriod))
                                 AutoPeriodUpdated = true;
-                            }
+
                             ad.setValue(NewAutoPeriod);
                         }
                     }
@@ -2276,9 +2279,8 @@ public class Punch implements ActionListener {
                 if (AutoPeriodUpdated || LocationUpdated || CloseTimeUpdated) {
                     String build = "The following values were successfully updated:\n";
 
-                    if (AutoPeriodUpdated) {
+                    if (AutoPeriodUpdated)
                         build = build + "Auto period was set to: " + NewAutoPeriod + "\n";
-                    }
 
                     if (LocationUpdated) {
                         build = build + "Location was set to: " + NewLocation + "\n";
@@ -2287,26 +2289,21 @@ public class Punch implements ActionListener {
 
                     if (CloseTimeUpdated) {
                         String[] HowMany = NewCloseTime.split(",");
-                        if (HowMany.length > 1) {
+                        if (HowMany.length > 1)
                             build = build + "Close times were set to: " + NewCloseTime + "\n";
-                        }
 
-                        else {
+                        else
                             build = build + "Close time was set to: " + NewCloseTime + "\n";
-                        }
                     }
 
                     windowsFeel();
 
                     JOptionPane.showMessageDialog(null,build, "Updates", JOptionPane.INFORMATION_MESSAGE,scaledDown);
-
                     swingFeel();
-
                     System.exit(0);
                 }
 
                 writeAD();
-
                 AdminMainFrame.dispose();
 
             }
@@ -2326,27 +2323,19 @@ public class Punch implements ActionListener {
         });
 
         Refreshall.setPreferredSize(new Dimension(250,25));
-
         Refreshall.setBorder(new LineBorder(Navy,3,false));
 
         JPanel LastPanel = new JPanel();
-
         LastPanel.setLayout(new FlowLayout());
-
         LastPanel.add(Refreshall);
 
         ParentPanel.add(LastPanel, Component.CENTER_ALIGNMENT);
-
         ParentPanel.setBorder(new LineBorder(Navy,10,false));
 
         AdminMainFrame.add(ParentPanel);
-
         AdminMainFrame.setLocationRelativeTo(null);
-
         AdminMainFrame.repaint();
-
         AdminMainFrame.revalidate();
-
         AdminMainFrame.setVisible(true);
 
         readAD();
@@ -2357,16 +2346,18 @@ public class Punch implements ActionListener {
                     case "close at":
                         CloseTimes.setText(ad.getValue());
                         break;
+
                     case "auto period":
                         AutoNewPeriod.setText(ad.getValue());
                         break;
+
                     case "location name":
                         LocationNameField.setText(ad.getValue());
                         break;
+
                     case "time change":
                         LogArea.append(ad.getValue() + "\n");
                         break;
-
                 }
             }
         }
@@ -2390,13 +2381,10 @@ public class Punch implements ActionListener {
             ADS.clear();
 
             BufferedReader ADSreader = new BufferedReader(new FileReader("AD.txt"));
-
             String Line;
-
             Line = ADSreader.readLine();
 
             while(Line != null && !Line.equals("") && Line.length() != 0) {
-
                 if (Line.startsWith("//")) {
                     ADS.add(new AD("comment",Line));
                 }
@@ -2426,10 +2414,12 @@ public class Punch implements ActionListener {
                 else if (Line.equals("Recent time changes:")) {
                     ADS.add(new AD("recent time changes header",Line));
                     Line = ADSreader.readLine();
+
                     while (!Line.equals("------------------------------------------------------")) {
                         ADS.add(new AD("time change",Line));
                         Line = ADSreader.readLine();
                     }
+
                     ADS.add(new AD("sep",Line));
                 }
 
@@ -2440,10 +2430,13 @@ public class Punch implements ActionListener {
                         ADS.add(new AD("reset date",Line));
                         Line = ADSreader.readLine();
                     }
+
                     ADS.add(new AD("sep",Line));
                 }
+
                 Line = ADSreader.readLine();
             }
+
             ADSreader.close();
         }
 
@@ -2464,22 +2457,18 @@ public class Punch implements ActionListener {
     private void writeAD() {
         try {
             BufferedWriter ADSwriter = new BufferedWriter(new FileWriter("AD.txt"));
-
             String WriteLast = ADS.removeLast().getValue();
 
             for (AD ad: ADS) {
                 ADSwriter.write(ad.getValue());
-
                 ADSwriter.write("\r\n");
-
                 ADSwriter.flush();
             }
 
             ADSwriter.write(WriteLast);
 
-            if (!WriteLast.equals("------------------------------------------------------")) {
+            if (!WriteLast.equals("------------------------------------------------------"))
                 ADSwriter.write("\n------------------------------------------------------");
-            }
 
             ADSwriter.close();
         }
@@ -2498,7 +2487,7 @@ public class Punch implements ActionListener {
         }
     }
 
-    //go through ADS object list and setup program processes based on them
+    //go through ADS object list and setup program vars based on them
     private void ActOnAdminActions() {
         readAD();
 
@@ -2526,22 +2515,16 @@ public class Punch implements ActionListener {
         Calendar CloseCalendar = Calendar.getInstance();
 
         CloseCalendar.add(Calendar.DAY_OF_MONTH, 0);
-
         CloseCalendar.set(Calendar.HOUR_OF_DAY, hour);
-
         CloseCalendar.set(Calendar.MINUTE, minute);
-
         CloseCalendar.set(Calendar.SECOND, 0);
-
         CloseCalendar.set(Calendar.MILLISECOND, 0);
 
         long HowMany = CloseCalendar.getTimeInMillis() - System.currentTimeMillis();
 
         //if we are past it for the day then it will just instantly close so we need to set it for tomorrow's dates
         HowMany = (HowMany < 0 ? HowMany + 24 * 60 * 60 * 1000 : HowMany);
-
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
         scheduler.schedule(ExitRunnable ,HowMany, TimeUnit.MILLISECONDS);
     }
 
@@ -2550,7 +2533,6 @@ public class Punch implements ActionListener {
         @Override
         public void run() {
             PunchFrame.dispose();
-
             System.exit(0);
         }
     };
