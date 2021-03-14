@@ -98,7 +98,6 @@ public class Punch implements ActionListener {
         //Admin actions such as reset dates, name of program, auto reset dates, and close at times
         ActOnAdminActions();
 
-
         //If a folder to store data DNE, make it
         if (!new File(Location).exists()) {
             new File(Location).mkdirs();
@@ -106,6 +105,7 @@ public class Punch implements ActionListener {
             read();
 
             try {
+                //make user folders and files
                 for (Users user : Users) {
                     write(user.getChangeName(), "false");
                     new File(Location + "\\" + user.getChangeName()).mkdirs();
@@ -135,137 +135,88 @@ public class Punch implements ActionListener {
 
         //GUI setsup until end of constructor
         PunchFrame = new JFrame();
-
         PunchFrame.setTitle(Location + " Punch Time Logger");
-
         PunchFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        ImageIcon img = new ImageIcon("Logo.png");
-
-        PunchFrame.setIconImage(img.getImage());
+        PunchFrame.setIconImage(new ImageIcon("Logo.png").getImage());
 
         JPanel ParentPanel = (JPanel) PunchFrame.getContentPane();
-
         ParentPanel.setLayout(new BoxLayout(ParentPanel,BoxLayout.Y_AXIS));
-
         ParentPanel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
 
         JPanel NamePanel = new JPanel();
-
         JLabel EnterName = new JLabel("Employee Name:");
-
         NamePanel.add(EnterName);
 
         NameField = new JTextField(40);
-
         NameField.setToolTipText("Username");
-
         Font TextBoxFont = NameField.getFont().deriveFont(Font.BOLD, 15f);
-
         EnterName.setFont(TextBoxFont);
-
         NameField.setFont(TextBoxFont);
-
         NamePanel.add(NameField);
-
         ParentPanel.add(NamePanel);
 
         JPanel PasswordPanel = new JPanel();
 
         JLabel Password = new JLabel("Employee Password:");
-
         Password.setFont(TextBoxFont);
-
         PasswordPanel.add(Password);
-
         PasswordField = new JPasswordField(40);
-
         PasswordField.setToolTipText("Password");
-
         PasswordPanel.add(PasswordField);
-
         ParentPanel.add(PasswordPanel);
 
         JPanel ButtonPanel = new JPanel();
-
         PunchIn = new JButton("Punch In");
-
         PunchOut = new JButton("Punch Out");
-
         AdminPanel = new JButton("Admin Panel");
-
         GetReport = new JButton("Time Card Report");
 
         PunchIn.addActionListener(this);
-
         PunchOut.addActionListener(this);
-
         AdminPanel.addActionListener(this);
-
         GetReport.addActionListener(this);
 
         PunchIn.setFont(TextBoxFont);
-
         PunchOut.setFont(TextBoxFont);
-
         AdminPanel.setFont(TextBoxFont);
-
         GetReport.setFont(TextBoxFont);
 
         PunchIn.setBackground(new Color(50,87,188));
-
         PunchOut.setBackground(new Color(223,85,83));
-
         AdminPanel.setBackground(new Color(231,87,122));
-
         GetReport.setBackground(new Color(138,118,231));
 
         PunchIn.setToolTipText("Punch in");
-
         PunchOut.setToolTipText("Punch out");
-
         AdminPanel.setToolTipText("Admin features");
-
         GetReport.setToolTipText("Employee time log");
 
         PunchIn.setFocusPainted(false);
-
         PunchIn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         PunchOut.setFocusPainted(false);
-
         PunchOut.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         AdminPanel.setFocusPainted(false);
-
         AdminPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         GetReport.setFocusPainted(false);
-
         GetReport.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         ButtonPanel.add(PunchIn);
-
         ButtonPanel.add(PunchOut);
-
         ButtonPanel.add(AdminPanel);
-
         ButtonPanel.add(GetReport);
-
         ParentPanel.add(ButtonPanel);
 
         PunchFrame.pack();
-
         PunchFrame.setVisible(true);
-
         PunchFrame.setLocationRelativeTo(null);
-
         PunchFrame.setResizable(false);
-
         PunchFrame.setAlwaysOnTop(true);
-
         PunchFrame.setAlwaysOnTop(false);
 
+        //if no users then we can't do anything until we add a user
         if (Users.size() == 0) {
             PunchIn.setEnabled(false);
             PunchOut.setEnabled(false);
@@ -282,10 +233,9 @@ public class Punch implements ActionListener {
         AdminCheck();
     }
 
-    //Action handler
     @Override
     public void actionPerformed(ActionEvent event) {
-        //Strings for data from the input fields
+        //field data
         String CurrentUser;
         String Password;
 
@@ -297,9 +247,7 @@ public class Punch implements ActionListener {
 
         //this is where the current user and password are obtained
         CurrentUser = NameField.getText().trim();
-
         char[] PasswordPrime = PasswordField.getPassword();
-
         Password = new String(PasswordPrime);
 
         try {
@@ -337,20 +285,14 @@ public class Punch implements ActionListener {
 
                 if (MatchParts.length == 3) {
                     MatchName = MatchParts[0];
-
                     MatchPassword = MatchParts[1];
-
                     AlreadyPunchedIn = MatchParts[2];
 
                     if (MatchName.equalsIgnoreCase(CurrentUser))
-                    {
                         break;
-                    }
 
                     else
-                    {
                         Line = employeeReader.readLine();
-                    }
                 }
             }
 
@@ -499,9 +441,7 @@ public class Punch implements ActionListener {
             else if (control == GetReport) {
                 if (CurrentUser.equalsIgnoreCase(MatchName) && Password.equals(MatchPassword)) {
                     TimeReport();
-
                     PunchFrame.dispose();
-
                     System.exit(0);
                 }
 
@@ -527,17 +467,14 @@ public class Punch implements ActionListener {
     private void PunchIn(String UserName) {
         try {
             File TLocation = new File(Location + "\\" + MatchName);
-
             TLocation.mkdirs();
 
 
             File TotalFile = new File(Location + "\\" + MatchName + "\\total.txt");
-
             TotalFile.createNewFile();
 
 
             File AllFile = new File(Location + "\\" + MatchName + "\\all.txt");
-
             AllFile.createNewFile();
         }
 
@@ -560,9 +497,7 @@ public class Punch implements ActionListener {
                 "Successfull Punch In", JOptionPane.INFORMATION_MESSAGE,scaledDown );
 
         swingFeel();
-
         read();
-
         write(UserName,"true");
 
         String LocationWrite = Location + "\\" + MatchName + "\\all.txt";
@@ -571,9 +506,7 @@ public class Punch implements ActionListener {
             BufferedWriter TimeWriter = new BufferedWriter(new FileWriter(LocationWrite,true));
 
             TimeWriter.write("In:\r\n" + NiceTime());
-
             TimeWriter.flush();
-
             TimeWriter.close();
         }
 
@@ -600,9 +533,7 @@ public class Punch implements ActionListener {
                 "Successfull Punch Out", JOptionPane.INFORMATION_MESSAGE,scaledDown);
 
         swingFeel();
-
         read();
-
         write(UserName,"false");
 
         try {
@@ -611,13 +542,10 @@ public class Punch implements ActionListener {
             WriteTotalTime(StartTime);
 
             String LocationWrite = Location + "\\" + MatchName + "\\all.txt";
-
             BufferedWriter TimeWriter = new BufferedWriter(new FileWriter(LocationWrite,true));
 
             TimeWriter.write("\r\n" + "\r\n" + "Out:\r\n" +  NiceTime() + "\r\n" + "\r\n" + "------------------------" + "\r\n" + "\r\n");
-
             TimeWriter.flush();
-
             TimeWriter.close();
         }
 
@@ -661,21 +589,17 @@ public class Punch implements ActionListener {
     private void read() {
         try {
             Users.clear();
-
             employeeReader = new BufferedReader(new FileReader("EmployeeList.txt"));
 
             String Line;
-
             Line = employeeReader.readLine();
-
             String[] currentUser;
 
             while(Line != null) {
                 currentUser = Line.split(",");
 
-                if (currentUser.length >= 3) {
+                if (currentUser.length >= 3)
                     Users.add(new Users(currentUser[0],currentUser[1],currentUser[2]));
-                }
 
                 Line = employeeReader.readLine();
             }
@@ -704,14 +628,11 @@ public class Punch implements ActionListener {
             employeeWriter = new BufferedWriter(new FileWriter("EmployeeList.txt"));
 
             for (Users u: Users) {
-                if (u.getChangeName().equalsIgnoreCase(UserName)) {
+                if (u.getChangeName().equalsIgnoreCase(UserName))
                     u.setChangeBinary(inout);
-                }
 
                 employeeWriter.write(u.getChangeName() + "," + u.getChangePass() + "," + u.getChangeBinary());
-
                 employeeWriter.write("\r\n");
-
                 employeeWriter.flush();
             }
 
@@ -735,18 +656,14 @@ public class Punch implements ActionListener {
     //Returns a date as a string
     private String NiceTime() {
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-
         Date NiceDate = new Date();
-
         return dateFormat.format(NiceDate);
     }
 
     //Returns a date as a string
     private String PleasantTime() {
         DateFormat dateFormat = new SimpleDateFormat("EEEEEEE MM/dd/yyyy hh:mm aaa");
-
         Date PleasantDate = new Date();
-
         return dateFormat.format(PleasantDate);
     }
 
@@ -754,40 +671,30 @@ public class Punch implements ActionListener {
     private void WriteTotalTime(String dateStart) {
         try {
             String LocationRead = Location + "\\" + MatchName + "\\total.txt";
-
             String dateStop = NiceTime();
 
             SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 
             Date DateStart;
-
             Date DateStop;
 
             DateStart = format.parse(dateStart);
-
             DateStop = format.parse(dateStop);
 
             long diff = DateStop.getTime() - DateStart.getTime();
-
             int Minutes = (int) TimeUnit.MILLISECONDS.toMinutes(diff);
-
             int OldMinutes;
-
             int TotalMinutes;
 
             BufferedReader NullCheck = new BufferedReader(new FileReader(LocationRead));
 
-            if (NullCheck.readLine() == null) {
+            if (NullCheck.readLine() == null)
                 OldMinutes = 0;
-            }
 
             else {
                 File OldTimeFile = new File(LocationRead);
-
                 Scanner Time = new Scanner(OldTimeFile);
-
                 OldMinutes = Time.nextInt();
-
                 Time.close();
             }
 
@@ -798,9 +705,7 @@ public class Punch implements ActionListener {
             BufferedWriter OutputTime = new BufferedWriter(new FileWriter(LocationRead));
 
             OutputTime.write(Integer.toString(TotalMinutes));
-
             OutputTime.flush();
-
             OutputTime.close();
         }
 
@@ -822,22 +727,16 @@ public class Punch implements ActionListener {
     private String GetInTime(String Username) {
         try {
             FileInputStream in = new FileInputStream(Location + "\\" + Username + "\\all.txt");
-
             BufferedReader LastReader = new BufferedReader(new InputStreamReader(in));
-
             String strLine = null, tmp;
 
-            while ((tmp = LastReader.readLine()) != null) {
+            while ((tmp = LastReader.readLine()) != null)
                 strLine = tmp;
-            }
 
-            assert strLine != null;
             String lastLine = strLine.replace("!","");
 
             in.close();
-
             LastReader.close();
-
             return lastLine;
         }
 
@@ -861,26 +760,19 @@ public class Punch implements ActionListener {
     private void CheckPeriod(String EonStart)  {
         try {
             DateFormat CheckMondayFormat = new SimpleDateFormat("u");
-
             DateFormat StartingFormat = new SimpleDateFormat("MM/dd/yy");
-
             DateFormat RenameFormat = new SimpleDateFormat("MM-dd-yyyy");
 
             Date CurrentDate = new Date();
-
             CheckMondayFormat.format(CurrentDate);
 
             Date EonStartDate = StartingFormat.parse(EonStart);
-
             int PastDays = (int)((CurrentDate.getTime() - EonStartDate.getTime()) / (1000 * 60 * 60 * 24));
-
             Rename = Location + " " + RenameFormat.format(CurrentDate);
-
             File RenameFile = new File(Rename);
 
             if ((PastDays % 14 == 0) && !Files.exists(RenameFile.toPath()) && NotInLog()) {
                 RefreshTime();
-
                 NewPeriod();
             }
         }
@@ -902,7 +794,6 @@ public class Punch implements ActionListener {
     //Method to revalidate all users punch in and punch out times and
     //add up the logged time in case the time was changed/altered within the file itself
     //and not from the program, which is the only way to do it
-    @SuppressWarnings("UnusedAssignment")
     private void RefreshTime() {
         try {
             //init users list
@@ -962,7 +853,6 @@ public class Punch implements ActionListener {
 
                             if (DialogResult == JOptionPane.YES_OPTION) {
                                 File WhereItIs = new File(Location + "\\" + user.getChangeName() + "\\all.txt");
-
                                 Desktop.getDesktop().open(WhereItIs);
                             }
 
@@ -1010,14 +900,12 @@ public class Punch implements ActionListener {
 
                     //init minutes total
                     int CurrentUserTotalMinutes = 0;
-
                     boolean UserAdded = false;
 
                     //for all the inout objects
                     for (InOut inOut : InOut) {
                         //get the in and out vals
                         String In = inOut.getIn();
-
                         String Out = inOut.getOut();
 
                         //make sure they are valid times otherwise its an error that needs to be corrected
@@ -1034,7 +922,6 @@ public class Punch implements ActionListener {
 
                             if (DialogResult == JOptionPane.YES_OPTION) {
                                 File WhereItIs = new File(Location + "\\" + user.getChangeName() + "\\all.txt");
-
                                 Desktop.getDesktop().open(WhereItIs);
                             }
 
@@ -1043,14 +930,15 @@ public class Punch implements ActionListener {
 
                         //Try to parse the dates, if it fails then an error needs to be corrected
                         Date InDate = new Date();
-
                         Date OutDate = new Date();
 
                         try {
                             InDate = AddingFormat.parse(In);
 
                             OutDate = AddingFormat.parse(Out);
-                        } catch (Exception e) {
+                        }
+
+                        catch (Exception e) {
                             int dialogueButton = JOptionPane.YES_NO_OPTION;
 
                             windowsFeel();
@@ -1063,7 +951,6 @@ public class Punch implements ActionListener {
 
                             if (DialogResult == JOptionPane.YES_OPTION) {
                                 File WhereItIs = new File(Location + "\\" + user.getChangeName() + "\\all.txt");
-
                                 Desktop.getDesktop().open(WhereItIs);
                             }
 
@@ -1076,34 +963,25 @@ public class Punch implements ActionListener {
                         //if the time is negative then we need to mark it in our negative users list
                         if (diff < 0 && !UserAdded) {
                             NegativeUsers.add(user.getChangeName());
-
                             UserAdded = true;
                         }
-
-                        //add/sub this shift to our total time from total.txt
-
-                        //took from here
-
 
                         CurrentUserTotalMinutes += TimeUnit.MILLISECONDS.toMinutes(diff);
                     }
 
                     double OldTotalMinutes = 0;
-
                     String LocationRead = Location + "\\" + user.getChangeName() + "\\total.txt";
 
                     if (new File(LocationRead).exists()) {
                         BufferedReader NullCheck = new BufferedReader(new FileReader(LocationRead));
 
-                        if (NullCheck.readLine() == null) {
+                        if (NullCheck.readLine() == null)
                             OldTotalMinutes = 0;
-                        } else {
+
+                        else {
                             File TotalTime = new File(LocationRead);
-
                             Scanner Time = new Scanner(TotalTime);
-
                             OldTotalMinutes = Time.nextInt();
-
                             Time.close();
                         }
 
@@ -1112,9 +990,8 @@ public class Punch implements ActionListener {
 
                     double PrintTime = (double) CurrentUserTotalMinutes - OldTotalMinutes;
 
-                    if (PrintTime != 0) {
+                    if (PrintTime != 0)
                         ChangedUsers.add("Employee " + user.getChangeName() + " added " + FourDecPlace.format(PrintTime / 60.0) + " hours to their total.");
-                    }
 
                     //now we have this users total time worked for this period so far so we will write it to the totals file
 
@@ -1153,7 +1030,6 @@ public class Punch implements ActionListener {
             //more than one negative user
             else if (!NegativeUserString.equalsIgnoreCase("[]") && NegativeUsers.size() > 1) {
                 Object[] options = {"OK"};
-
                 windowsFeel();
 
                 int choice = JOptionPane.showOptionDialog(null, "One of the punch-out times for the users " + NegativeUserString + " is before"
@@ -1165,31 +1041,25 @@ public class Punch implements ActionListener {
 
             if (ChangedUsers.size() != 0) {
                 LinkedList<AD> PoppedADS = new LinkedList<>();
-
                 AD currentAD = ADS.removeLast();
 
                 while (!currentAD.getName().equals("recent time changes header")) {
                     PoppedADS.push(currentAD);
-
                     currentAD = ADS.removeLast();
                 }
 
                 ADS.add(new AD("recent time changes header","Recent time changes:"));
 
-                for (String currentChanged: ChangedUsers) {
+                for (String currentChanged: ChangedUsers)
                     ADS.add(new AD("time change",currentChanged));
-                }
 
-                while (PoppedADS.size() != 0) {
+                while (PoppedADS.size() != 0)
                     ADS.add(PoppedADS.pop());
-                }
 
-                if (!ADS.peekLast().getValue().equals("------------------------------------------------------")) {
+                if (!ADS.peekLast().getValue().equals("------------------------------------------------------"))
                     ADS.add(new AD("sep","------------------------------------------------------"));
-                }
 
                 writeAD();
-
                 readAD();
             }
         }
@@ -1213,15 +1083,12 @@ public class Punch implements ActionListener {
         try {
             //init users
             read();
-
             File NoError = new File(Location);
 
             NoError.mkdirs();
 
             File LocationMake = new File(Location + "\\QuickTotal.txt");
-
             LocationMake.createNewFile();
-
             QuickTotals.clear();
 
             //make file to output to and setup objects
@@ -1237,42 +1104,34 @@ public class Punch implements ActionListener {
 
                     if (NullCheck.readLine() == null) {
                         ThisTotal = 0;
-                    } else {
+                    }
+
+                    else {
                         File TotalTime = new File(LocationRead);
-
                         Scanner Time = new Scanner(TotalTime);
-
                         ThisTotal = Time.nextInt();
-
                         Time.close();
                     }
 
                     NullCheck.close();
-
                     QuickTotals.add(new QuickTotals(user.getChangeName(), ThisTotal / 60));
                 }
             }
 
             //write the employee names and hours worked in the folder
             employeeWriter = new BufferedWriter(new FileWriter(Location + "\\QuickTotal.txt"));
-
             employeeWriter.write("[Name],[Hours Worked]");
-
             employeeWriter.write("\r\n");
-
             employeeWriter.flush();
 
             for (QuickTotals u: QuickTotals) {
-                if (TwoDecPlace.format(u.getHours()).equalsIgnoreCase(".0")) {
+                if (TwoDecPlace.format(u.getHours()).equalsIgnoreCase(".0"))
                     employeeWriter.write(u.getName() + ",0.0");
-                }
 
-                else {
+                else
                     employeeWriter.write(u.getName() + "," + TwoDecPlace.format(u.getHours()));
-                }
 
                 employeeWriter.write("\r\n");
-
                 employeeWriter.flush();
             }
             employeeWriter.close();
@@ -1300,42 +1159,34 @@ public class Punch implements ActionListener {
             for (int i = 0 ; i < Users.size() ; i++) {
                 if (Users.get(i).getChangeBinary().equalsIgnoreCase("true")) {
                     String Name = Users.get(i).getChangeName();
-
                     String LocationWrite = Location + "\\" + Name + "\\all.txt";
 
                     ForcedOutUsers.add(Users.get(i).getChangeName());
-
                     BufferedWriter TimeWriter = new BufferedWriter(new FileWriter(LocationWrite,true));
 
                     TimeWriter.write("\r\n" + "\r\n" + "Out:\r\n" +  "Missing Punch" + "\r\n" + "\r\n" + "------------------------" + "\r\n" + "\r\n");
-
                     TimeWriter.flush();
-
                     TimeWriter.close();
 
                     employeeWriter = new BufferedWriter(new FileWriter("EmployeeList.txt"));
 
                     for (Users u: Users) {
-                        if (u.getChangeName().equalsIgnoreCase(Name)) {
+                        if (u.getChangeName().equalsIgnoreCase(Name))
                             u.setChangeBinary("false");
-                        }
 
                         employeeWriter.write(u.getChangeName() + "," + u.getChangePass() + "," + u.getChangeBinary());
-
                         employeeWriter.write("\r\n");
-
                         employeeWriter.flush();
                     }
+
                     employeeWriter.close();
                 }
             }
 
             //Sum up the hours employees worked and output it
             QuickTotal();
-
-            //Createa new folder
+            //Create a new folder
             RenameFolder();
-
             //Log the reset
             AddDateToLog();
 
@@ -1347,15 +1198,13 @@ public class Punch implements ActionListener {
             AD firstAD = ADS.removeFirst();
 
             while (ADS.size() != 0) {
-                if (!firstAD.getName().equals("time change")) {
+                if (!firstAD.getName().equals("time change"))
                     TempADS.add(firstAD);
-                }
 
                 firstAD = ADS.removeFirst();
             }
 
             ADS = TempADS;
-
             writeAD();
         }
 
@@ -1376,18 +1225,13 @@ public class Punch implements ActionListener {
     //Used to create a new folder after a new period has been called
     private void RenameFolder() {
         DateFormat RenameFormat = new SimpleDateFormat("MM-dd-yyyy");
-
         Date CurrentDate = new Date();
-
         File OldNameFile = new File(Location);
-
         String NewNameString = Location + " " + RenameFormat.format(CurrentDate);
-
         File NewNameFile = new File(NewNameString);
 
-        if (NewNameFile.exists()) {
+        if (NewNameFile.exists())
             DeleteFolder(NewNameFile);
-        }
 
         OldNameFile.renameTo(NewNameFile);
     }
@@ -1398,61 +1242,48 @@ public class Punch implements ActionListener {
 
         if (files != null) {
             for (File f: files) {
-                if (f.isDirectory()) {
+                if (f.isDirectory())
                     DeleteFolder(f);
-                }
 
-                else {
+                else
                     f.delete();
-                }
             }
         }
+
         folder.delete();
     }
 
     private void swingFeel() {
         try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-
             Frame bodgeFrame = new JFrame();
-
             SwingUtilities.updateComponentTreeUI(bodgeFrame);
         }
 
         catch (Exception ex) {
-            windowsFeel();
-
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             ex.printStackTrace(pw);
 
             JOptionPane.showMessageDialog(null,"An unfortunate error occured.\nMaybe Nathan is an idiot?\n" +
                     "We won't know unless you email him the following error at: NathanJavaDevelopment@gmail.com\nError: " + sw.toString(), "Error", JOptionPane.ERROR_MESSAGE,scaledDown);
-
-            swingFeel();
         }
     }
 
     private void windowsFeel() {
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-
             JFrame bodgeFrame = new JFrame();
-
             SwingUtilities.updateComponentTreeUI(bodgeFrame);
         }
 
         catch (Exception ex) {
-            windowsFeel();
-
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             ex.printStackTrace(pw);
 
             JOptionPane.showMessageDialog(null,"An unfortunate error occured.\nMaybe Nathan is an idiot?\n" +
                     "We won't know unless you email him the following error at: NathanJavaDevelopment@gmail.com\nError: " + sw.toString(), "Error", JOptionPane.ERROR_MESSAGE,scaledDown);
-
-            swingFeel();
         }
     }
 
@@ -1462,11 +1293,8 @@ public class Punch implements ActionListener {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 
             JFrame bodgeFrame = new JFrame();
-
             SwingUtilities.updateComponentTreeUI(bodgeFrame);
-
             Object[] dialogueButton = {"Aces; do it!","No, nevermind"};
-
             ImageIcon scaledDown = new ImageIcon(new ImageIcon("Logo.png").getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
 
             windowsFeel();
@@ -1477,7 +1305,6 @@ public class Punch implements ActionListener {
             swingFeel();
 
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-
             SwingUtilities.updateComponentTreeUI(bodgeFrame);
 
             return (dialogueResult == JOptionPane.YES_OPTION);
@@ -1501,28 +1328,22 @@ public class Punch implements ActionListener {
 
     //Determines the gramatically correct apostrophe usage
     private String GetApostrophe(String Name) {
-        if (Name.charAt(Name.length()-1) == 's') {
+        if (Name.charAt(Name.length()-1) == 's')
             return "'";
-        }
 
-        else {
+        else
             return "'s";
-        }
     }
 
     //Used to tell if an automatic period should be called
     private boolean NotInLog() {
         SimpleDateFormat CF = new SimpleDateFormat("MM/dd/yy");
-
         Date CurrentDate = new Date();
-
         String CDString = CF.format(CurrentDate);
 
-        for (AD ad: ADS) {
-            if (ad.getName().equals("reset date") && ad.getValue().equals(CDString)) {
+        for (AD ad: ADS)
+            if (ad.getName().equals("reset date") && ad.getValue().equals(CDString))
                 return false;
-            }
-        }
 
         return true;
     }
@@ -1559,7 +1380,6 @@ public class Punch implements ActionListener {
         try {
             // Static getInstance method is called with hashing SHA
             MessageDigest md = MessageDigest.getInstance("SHA-256");
-
             return md.digest(input.getBytes(StandardCharsets.UTF_8));
         }
 
@@ -1588,24 +1408,21 @@ public class Punch implements ActionListener {
 
         // Pad with leading zeros
         while (hexString.length() < 32)
-        {
             hexString.insert(0, '0');
-        }
+
         return hexString.toString();
     }
 
     private boolean AdminCheck(String name, String pass) {
         try {
             BufferedReader AdminReader = new BufferedReader(new FileReader("AC.txt"));
-
             String Line;
 
             Line = AdminReader.readLine();
 
             while (Line != null) {
-                if (!emptyStr(Line) && !Line.substring(0, 2).equals("//")) {
+                if (!emptyStr(Line) && !Line.substring(0, 2).equals("//"))
                     if (pass.equals(Line)) return true;
-                }
                 Line = AdminReader.readLine();
             }
             AdminReader.close();
@@ -1629,14 +1446,11 @@ public class Punch implements ActionListener {
 
     private void AdminCheck() {
         boolean noPassYet = true;
-
         read();
 
         try {
             LinkedList<String> LinesList = new LinkedList<>();
-
             BufferedReader AdminReader = new BufferedReader(new FileReader("AC.txt"));
-
             String Line;
 
             Line = AdminReader.readLine();
@@ -1656,9 +1470,7 @@ public class Punch implements ActionListener {
                 //has not been initiated so we do that now and return true
                 else if (Line.charAt(0) == '!' && Line.contains(":")) {
                     String[] credentials = Line.split(":");
-
                     String storeName = credentials[0].replace("!","");
-
                     String storePass = credentials[1];
 
                     //create hash with a secret inside ;)
@@ -1668,29 +1480,22 @@ public class Punch implements ActionListener {
                     BufferedWriter AdminWriter = new BufferedWriter(new FileWriter("AC.txt",false));
 
                     for (String line: LinesList) {
-                        if (line.equals("\\n")) {
+                        if (line.equals("\\n"))
                             AdminWriter.write("\n");
-                        } else {
+                        else
                             AdminWriter.write(line + "\n");
-                        }
                     }
 
                     AdminWriter.write(hash);
-
                     AdminWriter.close();
-
                     AdminReader.close();
 
                     noPassYet = false;
 
                     employeeWriter = new BufferedWriter(new FileWriter("EmployeeList.txt"));
-
                     employeeWriter.write(storeName + "," + hash + ",false");
-
                     employeeWriter.write("\r\n");
-
                     employeeWriter.flush();
-
                     employeeWriter.close();
 
                     break;
@@ -1744,47 +1549,30 @@ public class Punch implements ActionListener {
         PasswordField.setText("");
 
         JFrame AdminMainFrame = new JFrame();
-
         AdminMainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
         AdminMainFrame.setSize(350,650);
-
         AdminMainFrame.setTitle("Admin panel");
-
         AdminMainFrame.setResizable(false);
 
         ImageIcon img = new ImageIcon("Logo.png");
-
         AdminMainFrame.setIconImage(img.getImage());
 
         JPanel ParentPanel = new JPanel();
-
         ParentPanel.setLayout(new BoxLayout(ParentPanel, BoxLayout.Y_AXIS));
 
         JPanel TopPanel = new JPanel();
-
         JLabel CloseTimesLabel = new JLabel("Close times:");
-
         CloseTimesLabel.setFont(new Font("tahoma", Font.BOLD, 15));
-
         CloseTimesLabel.setForeground(gray);
-
         TopPanel.add(CloseTimesLabel);
 
         JTextField CloseTimes = new JTextField(20);
-
         CloseTimes.setText("");
-
         CloseTimes.setFont(new Font("Segoe UI Black", Font.PLAIN, 10));
-
         CloseTimes.setSelectionColor(new Color(204,153,0));
-
         CloseTimes.setCaretColor(gray);
-
         CloseTimes.setPreferredSize(new Dimension(300,25));
-
         CloseTimes.setBorder(new LineBorder(Navy,3,false));
-
         TopPanel.add(CloseTimes);
 
         ParentPanel.add(TopPanel);
@@ -1792,61 +1580,37 @@ public class Punch implements ActionListener {
         JPanel BelowTop1Panel = new JPanel();
 
         JLabel AutoNewPeriodLabel = new JLabel("Auto new period:");
-
         AutoNewPeriodLabel.setFont(new Font("tahoma", Font.BOLD, 15));
-
         AutoNewPeriodLabel.setForeground(gray);
-
         BelowTop1Panel.add(AutoNewPeriodLabel);
 
         JTextField AutoNewPeriod = new JTextField(20);
-
         AutoNewPeriod.setText("");
-
         AutoNewPeriod.setFont(new Font("Segoe UI Black", Font.PLAIN, 10));
-
         AutoNewPeriod.setSelectionColor(new Color(204,153,0));
-
         AutoNewPeriod.setCaretColor(gray);
-
         AutoNewPeriod.setBorder(new LineBorder(Navy,3,false));
-
         BelowTop1Panel.add(AutoNewPeriod);
 
         ParentPanel.add(BelowTop1Panel);
 
         JPanel BelowTop1Panel2 = new JPanel();
-
         JLabel ResetLogLabel = new JLabel("Recent time changes:");
-
         ResetLogLabel.setFont(new Font("tahoma", Font.BOLD, 15));
-
         ResetLogLabel.setForeground(gray);
-
         BelowTop1Panel2.add(ResetLogLabel);
-
         JTextArea LogArea = new JTextArea();
 
         LogArea.setBorder(BorderFactory.createLineBorder(Navy, 5));
-
         LogArea.setEditable(false);
-
         LogArea.setAutoscrolls(true);
-
         LogArea.setLineWrap(true);
-
         LogArea.setWrapStyleWord(true);
-
         LogArea.setFocusable(true);
-
         LogArea.setForeground(c.darker());
-
         LogArea.setSelectionColor(new Color(204,153,0));
-
         LogArea.setBackground(new Color(252,251,227));
-
         LogArea.setOpaque(true);
-
         LogArea.setFont(new Font("tahoma", Font.BOLD, 14));
 
         JScrollPane ChangeScroll = new JScrollPane(LogArea,
@@ -1854,83 +1618,53 @@ public class Punch implements ActionListener {
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         ChangeScroll.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
-
         ChangeScroll.setPreferredSize(new Dimension(300,180));
-
         ChangeScroll.getViewport().setBorder(null);
-
         ChangeScroll.getViewport().setOpaque(false);
-
         ChangeScroll.setOpaque(false);
-
         ChangeScroll.setBorder(BorderFactory.createEmptyBorder());
 
         BelowTop1Panel2.add(ChangeScroll);
-
         ParentPanel.add(BelowTop1Panel2);
 
         JPanel AboveBottom1 = new JPanel();
-
         JLabel NewUserLabel = new JLabel("New user:");
 
         NewUserLabel.setFont(new Font("tahoma", Font.BOLD, 15));
-
         NewUserLabel.setForeground(gray);
-
         AboveBottom1.add(NewUserLabel);
 
         JTextField NewUserField = new JTextField(15);
-
         NewUserField.setText("");
-
         NewUserField.setFont(new Font("Segoe UI Black", Font.PLAIN, 10));
-
         NewUserField.setSelectionColor(new Color(204,153,0));
-
         NewUserField.setCaretColor(gray);
-
         NewUserField.setPreferredSize(new Dimension(300,20));
-
         NewUserField.setBorder(new LineBorder(Navy,3,false));
-
         AboveBottom1.add(NewUserField);
 
         ParentPanel.add(AboveBottom1);
 
         JPanel PasswordPanel = new JPanel();
-
         JLabel Password = new JLabel("Password:");
-
         Password.setFont(new Font("tahoma", Font.BOLD, 15));
-
         Password.setForeground(gray);
-
         PasswordPanel.add(Password);
 
         JPasswordField newPassField = new JPasswordField(15);
-
         newPassField.setSelectionColor(new Color(204,153,0));
-
         newPassField.setFont(new Font("Segoe UI Black", Font.PLAIN, 10));
-
         newPassField.setCaretColor(gray);
-
         newPassField.setBorder(new LineBorder(Navy,3,false));
-
         PasswordPanel.add(newPassField);
 
         ParentPanel.add(PasswordPanel);
 
         JButton AddUser = new JButton("Add New User");
-
         AddUser.setFocusPainted(false);
-
         AddUser.setFont(new Font("Segoe UI Black", Font.BOLD, 14));
-
         AddUser.setBackground(new Color(223,85,83));
-
         AddUser.setForeground(Color.black);
-
         AddUser.addActionListener(e -> {
             try {
                 String NewUserName = NewUserField.getText().trim();
@@ -1944,12 +1678,9 @@ public class Punch implements ActionListener {
                     try {
                         read();
 
-                        for (Users User: Users) {
-                            if (User.getChangeName().equalsIgnoreCase(NewUserName)) {
+                        for (Users User: Users)
+                            if (User.getChangeName().equalsIgnoreCase(NewUserName))
                                 throw new NullPointerException("User already exists");
-                            }
-                        }
-
 
                         Users.add(new Users(NewUserName,toHexString(getSHA(NewUserName +
                                 "b91332ab9b07376173e11198629b8fb11081f8bb2a1fb555af4d8f44e75c9cac"
@@ -1959,9 +1690,7 @@ public class Punch implements ActionListener {
 
                         for (Users u: Users) {
                             employeeWriter.write(u.getChangeName() + "," + u.getChangePass() + "," + u.getChangeBinary());
-
                             employeeWriter.write("\r\n");
-
                             employeeWriter.flush();
                         }
 
@@ -1976,13 +1705,11 @@ public class Punch implements ActionListener {
                         PunchOut.setEnabled(true);
                         GetReport.setEnabled(true);
 
-
                         swingFeel();
                     }
 
                     catch (NullPointerException exce) {
                         windowsFeel();
-
                         JOptionPane.showMessageDialog(null, "Sorry but that username is already in use." +
                                 "\nPlease choose a different username.", "Already exists", JOptionPane.INFORMATION_MESSAGE,scaledDown);
 
@@ -1990,9 +1717,7 @@ public class Punch implements ActionListener {
                     }
                     catch (Exception exc) {
                         windowsFeel();
-
                         JOptionPane.showMessageDialog(null, "Error: user was not created.", "ERROR", JOptionPane.ERROR_MESSAGE,scaledDown);
-
                         swingFeel();
                     }
                 }
@@ -2022,19 +1747,13 @@ public class Punch implements ActionListener {
         });
 
         AddUser.setPreferredSize(new Dimension(250,25));
-
         AddUser.setBorder(new LineBorder(Navy,3,false));
 
         JButton NewPeriod = new JButton("New Period");
-
         NewPeriod.setFocusPainted(false);
-
         NewPeriod.setFont(new Font("Segoe UI Black", Font.BOLD, 14));
-
         NewPeriod.setBackground(new Color(223,85,83));
-
         NewPeriod.setForeground(Color.black);
-
         NewPeriod.addActionListener(e -> {
             try {
                 //confirmation for new pay period
@@ -2062,13 +1781,10 @@ public class Punch implements ActionListener {
                         swingFeel();
 
                         String ForcedOutLocation = Rename + "\\ForcedOutUsers.txt";
-
                         BufferedWriter ForcedOutWriter = new BufferedWriter(new FileWriter(ForcedOutLocation,true));
 
                         ForcedOutWriter.write(ForcedOut);
-
                         ForcedOutWriter.flush();
-
                         ForcedOutWriter.close();
                     }
                     //Exit the program
@@ -2097,59 +1813,37 @@ public class Punch implements ActionListener {
         });
 
         NewPeriod.setPreferredSize(new Dimension(250,25));
-
         NewPeriod.setBorder(new LineBorder(Navy,3,false));
 
         JPanel FlowPanel = new JPanel();
-
         FlowPanel.setLayout(new FlowLayout());
-
         FlowPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-
         FlowPanel.add(AddUser);
-
         FlowPanel.add(NewPeriod);
-
         ParentPanel.add(FlowPanel, Component.CENTER_ALIGNMENT);
 
         JPanel BottomPanel = new JPanel();
-
         JLabel LocationName = new JLabel("Title:");
-
         LocationName.setFont(new Font("tahoma", Font.BOLD, 15));
-
         LocationName.setForeground(gray);
-
         BottomPanel.add(LocationName);
 
         JTextField LocationNameField = new JTextField(20);
-
         LocationNameField.setText(Location);
-
         LocationNameField.setFont(new Font("Segoe UI Black", Font.PLAIN, 10));
-
         LocationNameField.setSelectionColor(new Color(204,153,0));
-
         LocationNameField.setCaretColor(gray);
-
         LocationNameField.setPreferredSize(new Dimension(300,25));
-
         LocationNameField.setBorder(new LineBorder(Navy,3,false));
-
         BottomPanel.add(LocationNameField);
 
         ParentPanel.add(BottomPanel);
 
         JButton Refreshall = new JButton("Refresh all fields");
-
         Refreshall.setFocusPainted(false);
-
         Refreshall.setFont(new Font("Segoe UI Black", Font.BOLD, 14));
-
         Refreshall.setBackground(new Color(223,85,83));
-
         Refreshall.setForeground(Color.black);
-
         Refreshall.addActionListener(e -> {
             try {
                 readAD();
@@ -2163,17 +1857,14 @@ public class Punch implements ActionListener {
                 String NewLocation = LocationNameField.getText().trim();
 
                 try {
-                    if (emptyStr(NewCloseTime)) {
+                    if (emptyStr(NewCloseTime))
                         throw new Exception("New close time is blank.");
-                    }
 
-                    if (emptyStr(NewAutoPeriod)) {
+                    if (emptyStr(NewAutoPeriod))
                         throw new Exception("New auto period is blank.");
-                    }
 
-                    if (emptyStr(NewLocation)) {
+                    if (emptyStr(NewLocation))
                         throw new Exception("New location is blank.");
-                    }
                 }
 
                 catch (Exception ex) {
@@ -2228,9 +1919,9 @@ public class Punch implements ActionListener {
                     Location = NewLocation.trim();
                     for (AD ad: ADS) {
                         if (ad.getName().equals("location name")) {
-                            if (!ad.getValue().equals(NewLocation)) {
+                            if (!ad.getValue().equals(NewLocation))
                                 LocationUpdated = true;
-                            }
+
                             ad.setValue(Location);
                         }
                     }
@@ -2238,9 +1929,8 @@ public class Punch implements ActionListener {
                     writeAD();
 
                 }
-                else {
+                else
                     throw new Exception("New Location field is blank.");
-                }
 
                 boolean periodDateFormatCorrect = true;
 
